@@ -1,0 +1,12 @@
+<div class="col-sm-4" style="background-color:lavender;">
+	<h2>Categories</h2>
+		<div>
+			{% for category in p_categories %}
+			<a href = "{{url_for('showCategory', category_name = category.name)}}">
+				<div>
+					<p>{{category.name}}</p>
+				</div>
+			</a>
+			{% endfor %}
+		</div>
+</div>

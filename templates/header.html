@@ -1,0 +1,62 @@
+<nav class="navbar navbar-default">
+	<div class = "container">
+		<div class="row">
+			<div class="navbar-header">
+				<a class="navbar-brand" href="{{url_for('mainPage')}}">Catalog</a>
+			</div>
+			
+			{% if 'username' in p_session %}
+				<div>
+					<a class="navbar-btn col-md-11 text-right" href = "{{url_for('gdisconnect')}}">Logout</a>
+				</div>
+			{% else %}
+				<div class="navbar-btn col-md-11 text-right">
+					<div id="signinButton">
+						<span class="g-signin"
+						data-scope="openid email"
+						data-clientid="1043396348935-cm7u2169h1l0gbqgfkmakd380iha07ur.apps.googleusercontent.com"
+						data-redirecturi="postmessage"
+						data-accesstype="offline"
+						data-cookiepolicy="single_host_origin"
+						data-callback="signInCallback"
+						data-approvalprompt="force">
+						</span>
+					</div>
+					<div id="result" />
+					<script>
+						function signInCallback(authResult) {
+						console.log("HERE")
+							if (authResult['code']) {
+								// Send the one-time code to the Google server, if the server responds, write a 'login successful' message to the web page and then reurn to the main page
+								$.ajax({
+									type: 'POST',
+									url: '/gconnect?state={{STATE}}',
+									processData: false,
+									data: authResult['code'],
+									contentType: 'application/octet-stream; charset=utf-8',
+									success: function (result) {
+										// Handle the response coming back from the server
+										if (result) {
+											$('#result').html('Login Successful!</br>' + result + '</br>Redirecting...')
+											setTimeout(function () {
+												window.location.href = "/main";
+											}, 4000);
+
+										} else if (authResult['error']) {
+											console.log('There was an error: ' + authResult['error']);
+										} else {
+											$('#result').html('Failed to make a server-side call. Check your configuration and console.');
+										}
+									}
+								});
+							}
+						}
+					</script>
+				</div>
+			{% endif %}
+		</div>
+	</div>
+</nav>
+
+
+
